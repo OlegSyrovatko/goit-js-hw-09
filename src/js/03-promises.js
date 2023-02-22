@@ -1,4 +1,4 @@
-import Notiflix from 'notiflix'; 
+import Notiflix from 'notiflix';
 
 const refs = {
   form: document.querySelector(".form"),
@@ -9,21 +9,42 @@ const refs = {
 
 refs.form.addEventListener('submit', onFormSubmit);
 
+
+const createPromise = (i, allDelay) => {
+  return new Promise((resolve, reject) => {
+
+    // setTimeout(() => {
+    const shouldResolve = Math.random() > 0.3;
+
+    if (shouldResolve) {
+      Notiflix.Notify.success(`✅ Fulfilled promise ${i} in ${allDelay}ms`);
+    } else {
+      Notiflix.Notify.failure(`❌ Rejected promise ${i} in ${allDelay}ms`);
+    }
+    // }, step); 
+  });
+};
+
 function onFormSubmit(e) {
-  e.preventDefault(); 
-    console.log(refs.delay[0].value);
+  e.preventDefault();
+  const step = refs.step[0].value;
+  const delay = refs.delay[0].value;
+  let allDelay = Number(delay);
 
-  Notiflix.Notify.warning(refs.delay[0].value);
-Notiflix.Notify.success('Sol lucet omnibus');
+  setTimeout(() => {
+    for (let position = 1; position <= refs.amount[0].value; position++) {
 
-Notiflix.Notify.failure('Qui timide rogat docet negare');
-}
+      setTimeout(() => {
+        allDelay += Number(step);
+        console.log(step);
+        createPromise(position, allDelay)
+          .then(({ position, delay }) => {
 
-function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-  } else {
-    // Reject
-  }
+          })
+          .catch(({ position, delay }) => {
+
+          });
+      }, step);
+    }
+  }, delay);
 }

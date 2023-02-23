@@ -22,5 +22,9 @@ function stopColor() {
 }
 
 function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    const str1 = Math.floor(Math.random() * 16777215).toString(16);
+    // console.log(str1);
+    str1.padStart(6, '0')
+    // console.log(str1);
+    return `#${str1}`;
 }

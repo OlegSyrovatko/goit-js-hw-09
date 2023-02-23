@@ -4,36 +4,42 @@ import Notiflix from 'notiflix';
 
 const startButton = document.querySelector('[data-start]');
 startButton.setAttribute('disabled', 'true');
+startButton.addEventListener("click", runTime);
+let selectedDates = null;
 
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    
-    const dateNow = new Date();
-    const compareDate = dateNow - selectedDates[0];
-    if (compareDate >=0) {
-      Notiflix.Notify.warning('Please choose a date in the future');
-    }
-    else { 
-
-      startButton.removeAttribute('disabled'); 
-      const intervalId = setInterval(() => {
-
-        const dateNow = new Date();
-        const ms = selectedDates[0] - dateNow;
-        if (Math.round(ms / 1000) == 0) { clearInterval(intervalId); }
-
-        convertMs(ms); 
-      },
-      1000);
-    }
+  onClose(selected) {
+    startButton.removeAttribute('disabled'); 
+    selectedDates = selected;
   },
 };
 
 flatpickr('input#datetime-picker', options);
+
+
+function runTime() {
+  const dateNow = new Date();
+  if (dateNow.getTime() >=selectedDates[0].getTime()) {
+    Notiflix.Notify.warning('Please choose a date in the future');
+  }
+  else { 
+    startButton.setAttribute('disabled', 'true');
+    const intervalId = setInterval(() => {
+
+   
+      const ms = selectedDates[0].getTime() - new Date().getTime();
+      const msRound = Math.floor(ms / 1000);
+      if (msRound === 0) { clearInterval(intervalId); }
+
+      convertMs(ms); 
+    },
+    1000);
+  }
+}
 
 function convertMs(ms) {
 

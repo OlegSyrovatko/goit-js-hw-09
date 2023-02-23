@@ -5,12 +5,14 @@ const refs = {
   delay: document.getElementsByName("delay"),
   step: document.getElementsByName("step"),
   amount: document.getElementsByName("amount"),
+  btn: document.querySelector("button"),
 }
 
 refs.form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(e) {
   e.preventDefault();
+  refs.btn.setAttribute('disabled', 'true');
   const amount = Number(refs.amount[0].value);
   const step = Number(refs.step[0].value);
   const delayDefault = Number(refs.delay[0].value);
@@ -33,6 +35,11 @@ function onFormSubmit(e) {
       if (position == amount + 1) { clearInterval(timerId) }
     }, step);
   }, delayDefault);
+
+  setTimeout(() => {
+    refs.btn.removeAttribute('disabled');
+  }, delay + step * amount);
+  
 }
 
 const createPromise = (position, delay) => {

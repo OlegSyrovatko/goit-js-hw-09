@@ -11,23 +11,28 @@ refs.form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(e) {
   e.preventDefault();
+  const amount = Number(refs.amount[0].value);
   const step = Number(refs.step[0].value);
-  let delay = Number(refs.delay[0].value);
+  const delayDefault = Number(refs.delay[0].value);
+  let delay = delayDefault;
+  let position = 1;
 
-  for (let position = 1; position <= refs.amount[0].value; position++) {
+  setTimeout(() => {
+    const timerId = setInterval(() => {
 
-    setTimeout(() => {
       createPromise(position, delay)
-        .then(({ position, delay }) =>
-          { Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);  },
-      ).catch(({ position, delay }) => {
-         Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`); 
-    });
-    }, delay);
+        .then(({ position, delay }) => {
+          Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
+        },
+        ).catch(({ position, delay }) => {
+          Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
+        });
 
-    delay += step;
-
-  }
+      delay += step;
+      position += 1;
+      if (position == amount + 1) { clearInterval(timerId) }
+    }, step);
+  }, delayDefault);
 }
 
 const createPromise = (position, delay) => {
@@ -43,3 +48,4 @@ const createPromise = (position, delay) => {
   });
 
 };
+
